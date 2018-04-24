@@ -1,15 +1,27 @@
 #! /usr/bin/env ruby
 
 class Master
-  @code = []
+  def initialize
+    @code = []
+  end
+
+  def score_guess
+  end
+
+  def code
+    @code
+  end
 end
 
 class Guesser
-  @tries = 10
+  def initialize
+    @tries = 10
+  end
 
   def make_guess
-    puts 'Make a Guess'
+    puts 'Guesser, Make a guess'
     guess = gets.chomp.split('').map(&:to_i)
+    @tries -= 1
     puts "You guessed #{guess}"
   end
 end
@@ -18,7 +30,6 @@ class Game
   def initialize
     @range = nil
     @code_options = []
-    @code = []
     @master = Master.new
     @guesser = Guesser.new
   end
@@ -27,16 +38,28 @@ class Game
     @range
   end
 
+  def guesser
+    @guesser
+  end
+
+  def master
+    @master
+  end
+
   def code_options
     @code_options
   end
 
   def set_code_options
-    @code_options = (1..range).map(&:to_i)
+    !range.nil? && range > 1 ? @code_options = (1..range).map(&:to_i) : set_range
   end
 
-  def set_game_code
-    4.times { @code << @code_options[rand(range)] }
+  def set_random_game_code
+    4.times { master.code << @code_options[rand(range)] }
+  end
+
+  def set_custom_game_code
+    # give option to let master set their own code
   end
 
   def set_range
