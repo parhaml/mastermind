@@ -30,16 +30,29 @@ class Game
   end
 
   def play_game
-    #game control here
+    while guesser.remaining_guesses > 0
+      if guesser.won
+        puts "You Won!"
+        return
+      else
+
+        make_guess
+      end
+    end
+
+    puts "You lost the game, the code was #{master.code}"
   end
 
   def quick_start
     set_random_game_code
+    play_game
   end
 
   def make_guess
+
     guess = guesser.make_guess
-    master.score_guess(guess)
+    result = master.score_guess(guess)
+    guesser.won = true if result == 1
   end
 
   def set_code_options
@@ -82,17 +95,17 @@ class Master < Game
   end
 
   def score_guess(guess)
-    require 'pry'; binding.pry
+    system "clear"
     puts "The Master has received #{guess}"
-    return "You Won" if guess == code
-    common = guess & code
-    display_common_numbers(common)
+    return 1 if guess == code
+    display_common_numbers(guess)
     response = []
     guess.each_with_index {|num, idx| num == code[idx] ? response << num : response << "X" }
     puts "Here are your correct guesses: #{response}"
   end
 
-  def display_common_numbers(common)
+  def display_common_numbers(guess)
+    common = guess & code
     common.each{|num| p "There are #{code.count(num)} #{num}'s in the code"}
   end
 end
@@ -100,10 +113,19 @@ end
 class Guesser < Game
   def initialize
     @remaining_guesses = 10
+    @won = nil
   end
 
   def remaining_guesses
     @remaining_guesses
+  end
+
+  def won
+    @won
+  end
+
+  def won=(value)
+    @won = value
   end
 
   def reduce_remaining_guesses
@@ -111,11 +133,13 @@ class Guesser < Game
   end
 
   def make_guess
-    puts 'Guesser, Make a guess'
+    puts "Guesser, have #{remaining_guesses} guesses left. Make a guess"
     guess = gets.chomp.split('').map(&:to_i)
     puts "You guessed #{guess}"
     reduce_remaining_guesses
-    puts "You have #{remaining_guesses} guesses left"
     guess
   end
 end
+
+g = Game.new
+g.quick_start
