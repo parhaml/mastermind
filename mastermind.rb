@@ -2,15 +2,10 @@
 
 class Game
   def initialize
-    @range = nil
     @code_options = []
     @master = Master.new
     @guesser = Guesser.new
     @code_length = 4
-  end
-
-  def range
-    @range
   end
 
   def guesser
@@ -32,15 +27,35 @@ class Game
   def play_game
     while guesser.remaining_guesses > 0
       if guesser.won
-        puts "You Won!"
-        return
+        puts "You Won! It took you #{10 - guesser.remaining_guesses} guesses."
+        puts "Press any key to continute"
+        gets.chomp
+        g = Game.new
+        g.show_game_menu
       else
-
         make_guess
       end
     end
 
     puts "You lost the game, the code was #{master.code}"
+    puts "Press any key to continute"
+    gets.chomp
+    g = Game.new
+    g.show_game_menu
+  end
+
+  def show_game_menu
+    system "clear"
+    puts "Welcome to Mastermind! \nChoose from the options below:\n\n"
+    puts "1. Quick Start\n"
+    puts "2. Exit\n"
+    choice = gets.chomp
+    case choice
+    when "1"
+      quick_start
+    else
+      return "Bye!"
+    end
   end
 
   def quick_start
@@ -56,7 +71,7 @@ class Game
   end
 
   def set_code_options
-    !range.nil? && range > 1 ? @code_options = (1..range).map(&:to_i) : set_range
+    @code_options = (1..8).map(&:to_i)
   end
 
   def set_random_game_code
@@ -64,24 +79,12 @@ class Game
       set_code_options
       set_random_game_code
     else
-      code_length.times { master.code << @code_options[rand(range)] }
+      code_length.times { master.code << @code_options[rand(8)] }
     end
   end
 
   def set_custom_game_code
     # give option to let master set their own code
-  end
-
-  def set_range
-    puts "How many numbers do you want to guess from (Greater than 1)?"
-    @range = gets.chomp.to_i
-
-    if @range > 1
-      set_code_options
-    else
-      puts "Please enter a number greater than 1"
-      set_range
-    end
   end
 end
 
@@ -120,6 +123,10 @@ class Guesser < Game
     @remaining_guesses
   end
 
+  def remaining_guesses=(value)
+    @remaining_guesses = value
+  end
+
   def won
     @won
   end
@@ -142,4 +149,4 @@ class Guesser < Game
 end
 
 g = Game.new
-g.quick_start
+g.show_game_menu
