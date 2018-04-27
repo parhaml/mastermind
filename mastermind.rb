@@ -13,9 +13,9 @@ def show_game_menu
   choice = gets.chomp
   case choice
     when "1"
-      Game.new("AI", "Human").play_game
+      Game.new("ai_master").play_game
     when "2"
-      Game.new("Human","AI").play_game
+      Game.new("ai_guesser").play_game
     else
       puts "Bye!"
       @running = false

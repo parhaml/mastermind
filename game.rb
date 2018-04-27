@@ -1,10 +1,8 @@
 class Game
-  def initialize(guesser, master)
+  def initialize(option)
     @running = true
-    @code_options = []
-    @code_length = 4
-    @master = master == "AI" ? AiMaster.new : Master.new
-    @guesser = guesser == "AI" ? AiGuesser.new : Guesser.new
+    @master = option == "ai_master" ? AiMaster.new : Master.new
+    @guesser = option == "ai_guesser" ? AiGuesser.new : Guesser.new
   end
 
   def guesser
@@ -24,20 +22,7 @@ class Game
   end
 
   def play_game
-    puts "In Play Game"
-    puts "@running: #{@running}"
-    if guesser.remaining_guesses > 0 && @running
-      require 'pry'; binding.pry
-      if guesser.won
-        puts "You Won! It took you #{10 - guesser.remaining_guesses} guesses."
-        puts "Press any key to continute"
-        gets.chomp
-        show_game_menu
-      else
-        puts "In Make Guess"
-        make_guess
-      end
-    end
+    require 'pry'; binding.pry
     puts "You lost the game, the code was #{master.code}"
     puts "Press any key to continute"
     gets.chomp

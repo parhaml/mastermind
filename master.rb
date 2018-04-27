@@ -1,14 +1,27 @@
 class Master < Game
+
+  attr_reader :code_options
+  attr_accessor :code
   def initialize
+    @code_options = [1,2,3,4,5,6,7,8]
+    @code_length = 4
     @code = []
   end
 
-  def code
-    @code
+
+  def reset_code
+    code = []
   end
 
-  def set_custom_game_code
-    # give option to let master set their own code
+  def code_length
+    @code_length
+  end
+
+  def set_code
+    puts "Master: Choose a 4 digit code."
+    puts "You can use numbers 1 - 8 (more than once if you want)"
+    response = gets.chomp.split('')
+    code = response
   end
 
   def score_guess(guess)
@@ -29,12 +42,9 @@ end
 
 class AiMaster < Master
 
-  def set_random_game_code
-    if code_options.empty?
-      set_code_options
-      set_random_game_code
-    else
-      code_length.times { code << @code_options[rand(8)] }
-    end
+  def set_code
+    require 'pry'; binding.pry
+    reset_code
+    code_length.times { code << code_options[rand(8)] }
   end
 end

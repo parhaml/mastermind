@@ -11,7 +11,6 @@ class AiGuesser
     @guess = ["1","1","2","2"]
     @options = @opts.dup
     @guessing = true
-    puts @opts.count
   end
 
   def generate_code
