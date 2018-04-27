@@ -1,17 +1,17 @@
 class Guesser
   #generates possible guesses
 
-  attr_accessor :guessing
+  attr_accessor :guessing, :options
 
   def initialize
     @opts = (1111..8888)
-      .map{|num| num.to_s.split('') unless num.to_s.split('')
-      .any?{ |try| ["0","9"].include?(try)}}
+      .map{|num| num.to_s.split('') unless num.to_s.split('').any?{ |try| ["0","9"].include?(try)}}
       .delete_if{|opt| opt.nil?}
 
     @guess = ["1","1","2","2"]
     @options = @opts.dup
     @guessing = true
+    puts @opts.count
   end
 
   def generate_code
@@ -29,7 +29,7 @@ class Guesser
   end
 
   def make_guess
-    @guess = @options.first
+    system "clear"
     puts "Let me think . . ."
     sleep 3
     puts "I have a guess!"
@@ -46,32 +46,47 @@ class Guesser
     puts "Tell me which numbers I got correct in the correct spot."
     puts "Use a 0 for incorrect numbers"
     puts "Enter your 4 digit response now."
-    gets.chomp
+    gets.chomp.split('')
   end
 
   def run_guesser
+    system "clear"
     if guessing
       guess_prompt
     end
-    "We're done!"
+    return "We're done!"
   end
 
   private
     def show_matches(guess)
-      input = get_matches
+      input = get_matches.split
       response = []
-      guess.each_with_index {|num, idx| num == @code[idx] ? response << num : response << "0" }
+      guess.each_with_index {|num, idx| num == input[idx] ? response << num : response << "0" }
       response
     end
 
-    def rectify_guess
+    def deleter(idx)
 
-    show_matches(@guess).each_with_index do |num, idx|
-        @options.delete_if{|opt| opt[idx] == @guess[idx]} if num == "0"
+      @options.delete_if{|opt| opt[idx] == @guess[idx]}
     end
 
-    guess_prompt
-  end
+    def keeper(idx)
 
+      @options.keep_if{ |opt| opt[idx] == @guess[idx]}
+    end
+
+    def rectify_guess
+      system "clear"
+      puts "Guess was #{@guess.join}"
+      response = get_matches
+
+      response.each_with_index do |num, idx|
+
+        num == "0" ? deleter(idx) : keeper(idx)
+      end
+
+      @guess = @options.sample
+      guess_prompt
+    end
 end
 
