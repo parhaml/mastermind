@@ -27,6 +27,7 @@ class Master < Game
   def score_guess(guess)
     system "clear"
     puts "The Master has received #{guess}"
+    require 'pry'; binding.pry
     return 1 if guess == code
     display_common_numbers(guess)
     response = []
@@ -43,8 +44,11 @@ end
 class AiMaster < Master
 
   def set_code
-    require 'pry'; binding.pry
+    puts "I will now choose the hardest 4 digit code in the world!"
+    sleep 2
+    puts "Done"
     reset_code
-    code_length.times { code << code_options[rand(8)] }
+    code_length.times { code << code_options[rand(8)].to_s }
   end
+
 end

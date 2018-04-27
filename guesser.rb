@@ -107,8 +107,22 @@ class Guesser < Game
     @won
   end
 
+  def display_win
+    "You won the game!"
+  end
+
+  def display_loss
+    "You lost the game!"
+  end
+
   def won=(value)
     @won = value
+  end
+
+  def guess_prompt
+    puts "Do you want to make a guess? (y/n)"
+    response = gets.chomp
+    response == "y" ? make_guess : return
   end
 
   def reduce_remaining_guesses
@@ -116,10 +130,12 @@ class Guesser < Game
   end
 
   def make_guess
-    puts "Guesser, have #{remaining_guesses} guesses left. Make a guess"
-    guess = gets.chomp.split('').map(&:to_i)
-    puts "You guessed #{guess}"
+    puts "in make guess"
+    puts "Guesser, you have #{remaining_guesses} guesses left. Make a guess"
     reduce_remaining_guesses
+    guess = gets.chomp.split('')
+    require 'pry'; binding.pry
+    puts "You guessed #{guess}"
     guess
   end
 end
