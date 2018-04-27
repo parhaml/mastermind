@@ -1,4 +1,4 @@
-class Guesser
+class AiGuesser
   #generates possible guesses
 
   attr_accessor :guessing, :options
@@ -88,5 +88,40 @@ class Guesser
       @guess = @options.sample
       guess_prompt
     end
+end
+
+class Guesser < Game
+  def initialize
+    @remaining_guesses = 10
+    @won = nil
+  end
+
+  def remaining_guesses
+    @remaining_guesses
+  end
+
+  def remaining_guesses=(value)
+    @remaining_guesses = value
+  end
+
+  def won
+    @won
+  end
+
+  def won=(value)
+    @won = value
+  end
+
+  def reduce_remaining_guesses
+    @remaining_guesses -= 1
+  end
+
+  def make_guess
+    puts "Guesser, have #{remaining_guesses} guesses left. Make a guess"
+    guess = gets.chomp.split('').map(&:to_i)
+    puts "You guessed #{guess}"
+    reduce_remaining_guesses
+    guess
+  end
 end
 
